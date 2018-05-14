@@ -1,6 +1,0 @@
-
-[squid:S1197	"8Move the array designator from the variable to the type.(¡þÏÖøÿÿÿÿ8’ýžîµ,
-qsquid:S2095"NUse try-with-resources or close this "JavaSparkContext" in a "finally" clause.(¸á‚Ðùÿÿÿÿ8’ýžîµ,
-Gsquid:S1481")Remove this unused "data" local variable.(­˜Óñ8’ýžîµ,
-qsquid:S00101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(Ôêø¿úÿÿÿÿ8’ýžîµ,
-Vsquid:S1854"8Remove this useless assignment to local variable "data".(­˜Óñ8’ýžîµ,
