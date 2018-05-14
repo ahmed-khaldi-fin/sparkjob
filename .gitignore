@@ -1,0 +1,6 @@
+
+Supprimerait .gitignore
+Supprimerait src/main/resources/
+Supprimerait src/test/
+Supprimerait target/
+.idea/
