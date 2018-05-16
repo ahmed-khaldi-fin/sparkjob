@@ -1,18 +1,13 @@
 package com.sparxys;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
+
+import static org.apache.spark.sql.functions.current_date;
 
 public class SparkExample {
 
@@ -20,20 +15,22 @@ public class SparkExample {
         SparkConf conf = new SparkConf().setAppName("spark-example").setMaster("local").set("spark.cores.max", "10");
         JavaSparkContext sc = new JavaSparkContext(conf);
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        Date date = new Date();
-        String today = dateFormat.format(date);
-
-        //JavaRDD<String> data = sc.textFile("/home/finaxys/Projects/sparkJobs/input.csv");
-        //data.map(row -> row+=","+today).take(8).forEach(System.out::println);
-        
         SparkSession spark = SparkSession.builder().getOrCreate();
         spark.sql("set spark.sql.orc.impl=native");
-        
-        Dataset<Row> df = spark.read().csv("/home/finaxys/Projects/sparkJobs/input.csv");
 
-        df.map((MapFunction<Row, String>) row -> row +","+today, Encoders.STRING()).write().format("orc").save("spark-job");
-
+        Dataset<Row> df = spark.read().option("header", "false").csv("/home/finaxys/Projects/sparkJobs/input.csv");
+        Dataset<Row> df1 = df.withColumn("date", current_date());
+        Dataset<Row> df2 = df1.withColumnRenamed("_c0", "index")
+                              .withColumnRenamed("_c1", "column1")
+                              .withColumnRenamed("_c2", "column2")
+                              .withColumnRenamed("_c3", "column3")
+                              .withColumnRenamed("_c4", "column4")
+                              .withColumnRenamed("_c5", "column5")
+                              .withColumnRenamed("_c6", "column6")
+                              .withColumnRenamed("_c7", "column7");
+        df2.write().mode(SaveMode.Append)
+           .format("orc").partitionBy("date").save("spark-job");
+        df2.show();
         sc.close();
     }
 
